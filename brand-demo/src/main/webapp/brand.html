@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div id="app">
+<h1 id="welcomeMessage">欢迎你</h1>
+
+<input type="button" value="新增" id="add" @click="redirectToAddPage"><br>
+<hr>
+<table border="1" cellspacing="0" width="100%" id="brandTable">
+    <tr>
+        <th>序号</th>
+        <th>品牌名称</th>
+        <th>企业名称</th>
+        <th>排序</th>
+        <th>品牌介绍</th>
+        <th>状态</th>
+        <th>操作</th>
+
+    </tr>
+    <tr v-for="(brand,i) in brands" align="center">
+        <td>{{i+1}}</td>
+        <td>{{brand.brandName}}</td>
+        <td>{{brand.companyName}}</td>
+        <td>{{brand.ordered}}</td>
+        <td>{{brand.description}}</td>
+        <td v-if="brand.status==1">启用</td>
+        <td v-if="brand.status==0">禁用</td>
+        <td><a href='http://localhost:9080/brand_demo_war/selectbyid?id=" + brand.id + "'>修改</a><a href='#'>删除</a> </td>
+    </tr>
+</table>
+<hr>
+</div>
+<!--<script>
+    $(document).ready(function() {
+        // 获取欢迎信息
+        $.ajax({
+            url: 'http://localhost:9080/brand_demo_war/selectallservlet',
+            type: 'GET',
+            dataType: 'json',
+            success: function(user) {
+                $('#welcomeMessage').text(user.username + ", 欢迎你");
+            }
+        });
+
+        // 获取商品列表
+        $.ajax({
+            url: 'http://localhost:9080/brand_demo_war/selectallservlet',
+            type: 'GET',
+            dataType: 'json',
+            success: function(brands) {
+                var table = $('#brandTable');
+                $.each(brands, function(index, brand) {
+                    var statusText = (brand.status == 1) ? "启用" : "禁用";
+                    var row = "<tr align='center'>" +
+                        "<td>" + (index + 1) + "</td>" +
+                        "<td>" + brand.brand_name + "</td>" +
+                        "<td>" + brand.company_name + "</td>" +
+                        "<td>" + brand.ordered + "</td>" +
+                        "<td>" + brand.description + "</td>" +
+                        "<td>" + statusText + "</td>" +
+                        "<td><a href='/brand_demo_war/selectbyid?id=" + brand.id + "'>修改</a><a href='#'>删除</a> </td>" +
+                        "</tr>";
+                    table.append(row);
+                });
+            }
+        });
+
+        // 新增按钮点击事件
+        $('#add').click(function() {
+            location.href = "/brand_demo_war/add.jsp";
+        });
+    });
+</script>-->
+<script src="js/axios-0.18.0.js"></script>
+<script src="js/vue.js"></script>
+<script>
+
+    /*window.onload=function (){
+        axios({
+            method:"get",
+            url:"http://localhost:9080/brand_demo_war/selectallservlet"
+        }).then(function (resp){
+            let brands = resp.data;
+            var table = $('#brandTable');
+            for (let i = 0; i <brands.length ; i++) {
+                let brand=brands[i];
+                var statusText = (brand.status == 1) ? "启用" : "禁用";
+                var row = "<tr align='center'>" +
+                    "<td>" + (i + 1) + "</td>" +
+                    "<td>" + brand.brandName + "</td>" +
+                    "<td>" + brand.companyName + "</td>" +
+                    "<td>" + brand.ordered + "</td>" +
+                    "<td>" + brand.description + "</td>" +
+                    "<td>" + statusText + "</td>" +
+                    "<td><a href='/brand_demo_war/selectbyid?id=" + brand.id + "'>修改</a><a href='#'>删除</a> </td>" +
+                    "</tr>";
+                table.append(row);
+            }
+        })
+    }
+    $('#add').click(function() {
+        location.href = "http://localhost:9080/brand_demo_war/add.html";
+    });*/
+
+    //上面都是没用vue框架的代码
+    new Vue({
+        el:"#app",
+        methods: {
+            redirectToAddPage() {
+                window.location.href = "http://localhost:9080/brand_demo_war/add.html";
+            }
+        },
+        data(){
+            return{
+                brands:[]
+            }
+        },
+        mounted(){
+            //页面加载完成后，发送异步请求，查询数据
+            var _this=this;
+            axios({
+                method:"get",
+                url:"http://localhost:9080/brand_demo_war/selectallservlet"
+            }).then(function (resp){
+                _this.brands=resp.data;
+
+            })
+        }
+    })
+</script>
+
+
+
+</body>
+</html>
