@@ -15,15 +15,10 @@ public class BrandService {
         //获取session工厂
     //ApplicationContext ctx=new AnnotationConfigApplicationContext(SpringConfig.class);
 
-    @Autowired
-    private BrandMapper brandMapper;
+    /*@Autowired
+    private BrandMapper brandMapper;*/
      SqlSessionFactory factory=SqlSessionFactoryutils.get_SqlSessionFactory();
-    public List<Brand> selectAll(){
 
-        List<Brand> brands = brandMapper.selectAll();
-        //sqlSession.close();
-        return brands;
-    }
 
     public void InsertBrand(Brand brand){
         //获取sqlsession

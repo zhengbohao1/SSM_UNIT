@@ -1,3 +1,4 @@
+/*
 package com.itzbh.web;
 
 import com.alibaba.fastjson.JSON;
@@ -27,29 +28,35 @@ public class SelectAllServlet extends HttpServlet {
         //调用函数
         List<Brand> brands = accountService.selectAll();
 
-        /*String value="张三";
-        value= URLEncoder.encode(value);*/
+        */
+/*String value="张三";
+        value= URLEncoder.encode(value);*//*
+
 
 
         //存入req域中
         req.setAttribute("brands",brands);
 
-        /*Cookie cookie=new Cookie("username",value);
+        */
+/*Cookie cookie=new Cookie("username",value);
 
         cookie.setMaxAge(60*60*24*7);
 
         resp.addCookie(cookie);
-*/
+*//*
+
 
         //转发到breand.jsp
         //req.getRequestDispatcher("/brand.jsp").forward(req,resp);
 
-        /*Gson gson = new Gson();
+        */
+/*Gson gson = new Gson();
         String json = gson.toJson(brands);
 
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
-        resp.getWriter().write(json);*/
+        resp.getWriter().write(json);*//*
+
 
         //用fastJason把brands转换为json
         String jsonString = JSON.toJSONString(brands);
@@ -65,3 +72,4 @@ public class SelectAllServlet extends HttpServlet {
 
 
 }
+*/
