@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+    namespace:名称空间
+-->
+<mapper namespace="com.itzbh.mapper.BrandMapper2">
+
+        <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+            insert into tb_brand(brand_name,company_name,ordered,description,status)
+            values (#{brand_name},#{company_name},#{ordered},#{description},#{status});
+        </insert>
+
+        <update id="update">
+            update  tb_brand
+            <set>
+                <if test="brand_name!=null and brand_name!=''">
+                    brand_name=#{brand_name},
+                </if>
+                <if test="company_name!=null and company_name!=''">
+                    company_name=#{company_name},
+                </if>
+                <if test="ordered!=null">
+                    ordered=#{ordered},
+                </if>
+                <if test="description!=null and description!=''">
+                    description=#{description},
+                </if>
+                <if test="status!=null">
+                    status=#{status}
+                </if>
+            </set>
+            where id=#{id}
+        </update>
+        <delete id="deletebyid">
+            delete from tb_brand where id=#{id};
+        </delete>
+        <delete id="deletebyids">
+            delete from tb_brand where id
+            in(
+            <foreach collection="items" item="id" separator=",">
+                #{id}
+            </foreach>
+            )
+
+        </delete>
+
+        <select id="selectAll" resultType="com.itzbh.domain.Brand">
+            select *from tb_brand;
+        </select>
+        <!--参数占位符
+            #{}用来放字符，可以防止sql注入
+            ${}用来放字符，会存在sql注入
+            如果表名或者列名需要传参确定，那么就用${},但是会存在sql注入，所以一般不传参表名或者列名
+        -->
+        <select id="selectbyid" resultType="com.itzbh.domain.Brand">
+            select * from tb_brand where id=#{id}
+        </select>
+        <select id="selectBycondition" resultType="com.itzbh.domain.Brand">
+            select *
+            from tb_brand
+            <where>
+                <if test="status!=null">
+                    and status=#{status}
+                </if>
+
+                <if test="company_name!=null">
+                    and company_name like #{company_name}
+                </if>
+
+                <if test="brand_name!=null and brand_name!=''">
+                    and  brand_name like #{brand_name};
+                </if>
+            </where>
+
+
+        </select>
+
+        <select id="selectTotalCount" resultType="java.lang.Integer">
+            select count(*)
+            from tb_brand;
+        </select>
+        <select id="selectByPageAndCondition" resultType="com.itzbh.domain.Brand">
+            select  *
+            from tb_brand
+            <where>
+                <if test="brand.brand_name!=null and brand.brand_name!=''">
+                    and brand_name like #{brand.brand_name}
+                </if>
+                <if test="brand.company_name!=null and brand.company_name!=''">
+                    and company_name like #{brand.company_name}
+                </if>
+                <if test="brand.status!=-1">
+                    and status=#{brand.status}
+                </if>
+            </where>
+            limit #{begin},#{size}
+        </select>
+        <select id="selectTotalCountByCondition" resultType="java.lang.Integer">
+            select count(*)
+            from tb_brand
+            <where>
+                <if test="brand_name!=null and brand_name!=''">
+                    and brand_name like #{brand_name}
+                </if>
+                <if test="company_name!=null and company_name!=''">
+                    and company_name like #{company_name}
+                </if>
+                <if test="status!=-1">
+                    and status=#{status}
+                </if>
+            </where>
+        </select>
+
+
+</mapper>
