@@ -8,5 +8,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @ComponentScan("com.itzbh.service")
 @Import({JdbcConfig.class, MybatisConfig.class})
+@EnableTransactionManagement
 public class SpringConfig {
 }

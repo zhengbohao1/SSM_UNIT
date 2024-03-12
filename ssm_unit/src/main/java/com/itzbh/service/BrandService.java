@@ -1,11 +1,13 @@
 package com.itzbh.service;
 
 import com.itzbh.domain.Brand;
+import com.itzbh.domain.pagebean;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
-
+@Transactional
 public interface BrandService {
     List<Brand> selectAll();
     Brand selectbyid(int id);
@@ -21,9 +23,8 @@ public interface BrandService {
 
     boolean deletebyids(@Param("items") int[] ids);
 
-    List<Brand> selectByPageAndCondition(@Param("begin") int begin,@Param("size") int size,@Param("brand")Brand brand);
+    pagebean<Brand> selectByPageAndCondition(@Param("begin") int begin,@Param("size") int size,@Param("brand")Brand brand);
 
-    int selectTotalCount();
 
-    int selectTotalCountByCondition(Brand brand);
+
 }

@@ -1,8 +1,10 @@
 package com.itzbh.service.impl;
 
 import com.itzbh.domain.Brand;
+import com.itzbh.domain.pagebean;
 import com.itzbh.mapper.BrandMapper2;
 import com.itzbh.service.BrandService;
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -59,17 +61,34 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public List<Brand> selectByPageAndCondition(int begin, int size, Brand brand) {
-        return brandmapper.selectByPageAndCondition(begin, size, brand);
+    public pagebean<Brand> selectByPageAndCondition(int currentPage,int pageSize,Brand brand) {
+        //计算
+        int begin=(currentPage-1)*pageSize;
+        //计算条目数
+        int size=pageSize;
+
+        String brandName = brand.getBrandName();
+        if (brandName != null && brandName.length() > 0) {
+            brand.setBrandName("%" + brandName + "%");
+        }
+
+        String companyName = brand.getCompanyName();
+        if (companyName != null && companyName.length() > 0) {
+            brand.setCompanyName("%" + companyName + "%");
+        }
+        //
+        //封装pagebean对象
+        List<Brand> rows = brandmapper.selectByPageAndCondition(begin,size,brand);
+        int totalCount= brandmapper.selectTotalCountByCondition(brand);
+        //封装
+        pagebean<Brand> brandpagebean = new pagebean<>();
+        brandpagebean.setRows(rows);
+        brandpagebean.setTotalcount(totalCount);
+        /*//释放资源
+        sqlSession.close();*/
+
+        return brandpagebean;
     }
 
-    @Override
-    public int selectTotalCount() {
-        return brandmapper.selectTotalCount();
-    }
 
-    @Override
-    public int selectTotalCountByCondition(Brand brand) {
-        return brandmapper.selectTotalCountByCondition(brand);
-    }
 }
