@@ -4,4 +4,8 @@
 
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
+
+  <welcome-file-list>
+    <welcome-file>pages/login.html</welcome-file> <!-- 将 login.html 设置为默认欢迎文件 -->
+  </welcome-file-list>
 </web-app>

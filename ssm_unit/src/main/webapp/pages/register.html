@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎注册</title>
+    <link href="../css/register.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div id="app">
+    <div class="form-div">
+        <div class="reg-content">
+            <h1>欢迎注册</h1>
+            <span>已有帐号？</span> <a href="login.html">登录</a>
+        </div>
+        <form id="reg-form">
+            <table>
+                <tr>
+                    <td>用户名</td>
+                    <td class="inputs">
+                        <input v-model="user.username" type="text" id="username">
+                        <br>
+                        <span id="username_err" class="err_msg">{{ checkMsg }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>密码</td>
+                    <td class="inputs">
+                        <input v-model="user.password" type="password" id="password">
+                        <br>
+                        <span id="password_err" class="err_msg" style="display: none">密码格式有误</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>验证码</td>
+                    <td class="inputs">
+                        <input v-model="checkCode" type="text" id="checkCode">
+                        <img :src="checkCodeImgUrl">
+                        <a href="#" @click="refreshCheckCode">看不清？</a>
+                        <br>
+                        <span id="yanzhengma_error" class="err_msg">{{ checkMsg }}</span>
+                    </td>
+                </tr>
+            </table>
+            <div class="buttons">
+                <button @click="register($event)"  id="reg_btn">注 册</button>
+            </div>
+            <br class="clear">
+        </form>
+    </div>
+</div>
+
+<script src="../js/vue.js"></script>
+<script src="../element-ui/lib/index.js"></script>
+<link rel="stylesheet" href="../element-ui/lib/theme-chalk/index.css">
+<script src="../js/axios-0.18.0.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            user:{
+                username: '',
+                password: '',
+            },
+
+            checkCode: '',
+            registerMsg: '',
+            checkMsg: '',
+            checkCodeImgUrl: '/ssm_unit_war/codes/generateCheckCode' // 初始验证码图片URL
+        },
+        methods: {
+            refreshCheckCode() {
+                this.checkCodeImgUrl = '/ssm_unit_war/codes/generateCheckCode?' + new Date().getMilliseconds();
+            },
+            register(event) {
+                event.preventDefault(); // 阻止表单默认提交
+                var _this=this;
+                axios({
+                    method:"post",
+                    url:"http://localhost:9080/ssm_unit_war/login/register?checkCode="+_this.checkCode+"",
+                    data:_this.user
+                }).then(function(resp){
+                    var jsonData = JSON.stringify(_this.user);
+                    console.log(jsonData);
+                    if(resp.data.data===true){
+                        window.location.href = 'login.html';
+                    }
+                    else{
+                        if(resp.data.code===20070){
+                            _this.registerMsg="注册失败";
+                            _this.$message({
+                                showClose: true,
+                                message: '注册失败，验证码错误',
+                                type: 'error'
+                            });
+                        }
+                        else{
+                            _this.registerMsg="注册失败";
+                            _this.$message({
+                                showClose: true,
+                                message: '注册失败，用户名已存在',
+                                type: 'error'
+                            });
+                        }
+
+                    }
+                })
+
+            },
+            goToAbout() {
+                window.location.href = 'login.html';
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
